@@ -26,7 +26,7 @@ double System::kinetic_term() {
     return kinetic/BETA/H_BAR;
 }
 
-double System::potential_term() {
+double System::update_external_term() {
     double potential = 0;
     for(int i=0;i<particles.size();i++){
         potential+=particles[i].potential_term();
@@ -35,7 +35,7 @@ double System::potential_term() {
 }
 
 double System::probability() {
-    return exp(-kinetic_term()-potential_term());
+    return exp(-kinetic_term-internal_term-external_term);
 }
 
 void System::step() {
@@ -43,4 +43,8 @@ void System::step() {
     for(int i;i<observables.size();i++){
         observables[i](*this);
     }
+}
+
+void System::reject() {
+
 }

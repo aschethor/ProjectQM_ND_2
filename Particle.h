@@ -16,6 +16,7 @@ public:
     //double charge;
     //char element;
 
+    vector<double*> internal_terms;//pointers to interaction terms
     vector<Bead> beads;
 
     Particle(double mass,int nBeads,double (*external_potential)(Bead bead));
