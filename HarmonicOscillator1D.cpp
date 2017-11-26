@@ -78,7 +78,19 @@ void my_step_1D_2(Particle* particle,vector<double> randoms){
     }
 }
 
-int main() {
+void classic_harmonic_oscillator(){
+    output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\harmonic_oscillator_cl.csv");
+    srand (time(NULL));
+    System system(&my_calc_internal_term,&my_calc_external_term);
+    system.add_particle(Particle(1,'x',1,&my_step_1D));
+    system.monte_carlo(1000);
+    system.add_observable(&observable);
+    system.monte_carlo(500000);
+    cout<<"done. accepted vs rejected samples: "<<system.n_accepted<<" / "<<system.n_rejected<<endl;
+    output_file.close();
+}
+
+void quantum_harmonic_oscillator(){
     output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\harmonic_oscillator_qm.csv");
     srand (time(NULL));
     System system(&my_calc_internal_term,&my_calc_external_term);
@@ -88,5 +100,24 @@ int main() {
     system.monte_carlo(50000);
     cout<<"done. accepted vs rejected samples: "<<system.n_accepted<<" / "<<system.n_rejected<<endl;
     output_file.close();
+}
+
+void naive_quantum_harmonic_oscillator(){
+    output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\harmonic_oscillator_qm_naive.csv");
+    srand (time(NULL));
+    System system(&my_calc_internal_term,&my_calc_external_term);
+    system.add_particle(Particle(1,'x',40,&my_step_1D_2));
+    system.monte_carlo(1000);
+    system.add_observable(&observable);
+    system.monte_carlo(50000);
+    cout<<"done. accepted vs rejected samples: "<<system.n_accepted<<" / "<<system.n_rejected<<endl;
+    output_file.close();
+}
+
+int main() {
+    cout<<"Harmonic Oscillator"<<endl;
+    classic_harmonic_oscillator();
+    //quantum_harmonic_oscillator();
+    //naive_quantum_harmonic_oscillator();
     return 0;
 }
