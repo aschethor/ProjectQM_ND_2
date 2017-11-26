@@ -7,7 +7,7 @@
 
 static const double H_BAR = 1;
 static const double K_B = 1;
-static const double T = 1;
+static const double T = 0.1;
 static const double BETA = 1/K_B/T;
 
 /**

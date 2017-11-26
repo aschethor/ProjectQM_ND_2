@@ -79,7 +79,7 @@ double Particle::kinetic_term() {
     for(int i=1;i<n;i++){
         kinetic_term += beads[i].distance_squared(beads[i-1]);
     }
-    return n*mass*kinetic_term/BETA/H_BAR;
+    return n*mass*kinetic_term/BETA/H_BAR/2;
 }
 
 void Particle::reject() {
