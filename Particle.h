@@ -13,20 +13,20 @@ using namespace std;
 class Particle {
 public:
     double mass;
-    //double charge;
-    //char element;
+    char element;
 
-    vector<double*> internal_terms;//pointers to interaction terms
     vector<Bead> beads;
 
-    Particle(double mass,int nBeads,double (*external_potential)(Bead bead));
+    Particle(double mass,char element,int nBeads);
+    Particle(double mass,char element,int nBeads,void (*step)(Particle* particle,vector<double> randoms));
+    Particle(double mass,char element,int nBeads,void (*step)(Bead* bead,vector<double> randoms));
+    Particle(double mass,char element,int nBeads,void (*step_particle)(Particle* particle,vector<double> randoms),void (*step_bead)(Bead* bead,vector<double> randoms));
 
-    Bead get_bead(int numerator,int denominator);
     double kinetic_term();
-    double potential_term();
-    double (*external_potential)(Bead bead);
-    //double (*internal_potential)(Particle particle);//later... maybe better: depends on Bead -> get_bead()
-    virtual void step(vector<double> randoms);
+
+    void (*step)(Particle* particle,vector<double> randoms);
+    void accept();
+    void reject();
 };
 
 

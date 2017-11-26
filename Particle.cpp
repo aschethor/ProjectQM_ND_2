@@ -4,19 +4,73 @@
 
 #include <iostream>
 #include "Particle.h"
+#include "Constants.h"
+#include <math.h>
 
-Particle::Particle(double mass,int nBeads,double (*external_potential)(Bead bead)) {
-    this->mass = mass;
-    this->external_potential = external_potential;
-    for(int i=0;i<nBeads;i++){
-        beads.push_back(Bead());
+void _step(Particle* particle,vector<double> randoms){
+    if(randoms.size()==0){
+        // generate random uniform spherical distribution
+        double phi = rand_u()*2*M_PI;
+        double theta = acos(rand_u()*2-1);
+        double x = sin(theta)*cos(phi);
+        double y = sin(theta)*sin(phi);
+        double z = cos(theta);
+
+        // multiply by alpha
+        double alpha = rand_u()*1;
+        x *= alpha;
+        y *= alpha;
+        z *= alpha;
+
+        // excite "modes" of bead-ring
+        int mode = rand_u()*particle->beads.size()/2;
+        double phase = rand_u()*M_PI/2;
+        for(int i=0;i<particle->beads.size();i++){
+            double factor = sin(i*mode*2*M_PI+phase);
+            vector<double> randoms;
+            randoms.push_back(factor*x);
+            randoms.push_back(factor*y);
+            randoms.push_back(factor*z);
+            particle->beads[i].step(&particle->beads[i],randoms);
+        }
     }
 }
 
-Bead Particle::get_bead(int numerator, int denominator) {
-    //idea: interpolate between beads etc (later)
-    //if(denominator!=beads.size()) -> error
-    return beads[numerator];
+Particle::Particle(double mass, char element, int nBeads) {
+    this->mass = mass;
+    this->element = element;
+    for(int i=0;i<nBeads;i++){
+        beads.push_back(Bead());
+    }
+    this->step = _step;
+}
+
+Particle::Particle(double mass, char element, int nBeads, void (*step_particle)(Particle *, vector<double>)) {
+    this->mass = mass;
+    this->element = element;
+    for(int i=0;i<nBeads;i++){
+        beads.push_back(Bead());
+    }
+    this->step = step_particle;
+}
+
+Particle::Particle(double mass, char element, int nBeads, void (*step_bead)(Bead *, vector<double>)) {
+    this->mass = mass;
+    this->element = element;
+    for(int i=0;i<nBeads;i++){
+        beads.push_back(Bead(step_bead));
+    }
+    this->step = _step;
+}
+
+Particle::Particle(double mass, char element, int nBeads, void (*step_particle)(Particle *, vector<double>),
+                   void (*step_bead)(Bead *, vector<double>)) {
+    this->mass = mass;
+    this->element = element;
+    for(int i=0;i<nBeads;i++){
+        beads.push_back(Bead(step_bead));
+    }
+    this->step = step_particle;
 }
 
 double Particle::kinetic_term() {
@@ -25,18 +79,17 @@ double Particle::kinetic_term() {
     for(int i=1;i<n;i++){
         kinetic_term += beads[i].distance_squared(beads[i-1]);
     }
-    return n*mass*kinetic_term;
+    return n*mass*kinetic_term/BETA/H_BAR;
 }
 
-double Particle::potential_term() {
-    int n = beads.size();
-    double potential = 0;
-    for(int i=0;i<n;i++){
-        potential += external_potential(beads[i]);
+void Particle::reject() {
+    for(int i=0;i<beads.size();i++){
+        beads[i].reject();
     }
-    return potential/n;
 }
 
-void Particle::step(vector<double> randoms) {
-    std::cout << "Particle step" << std::endl;
+void Particle::accept() {
+    for(int i=0;i<beads.size();i++){
+        beads[i].accept();
+    }
 }
