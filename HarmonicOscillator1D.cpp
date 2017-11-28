@@ -78,9 +78,27 @@ void my_step_1D_2(Particle* particle,vector<double> randoms){
     }
 }
 
+/*
+ * "naive" step-approach but a bit more advanced
+ */
+void my_step_1D_3(Particle* particle,vector<double> randoms){
+    if(randoms.size()==0){
+        double alpha = 1;
+        if(rand_u()<0.15){ // -> shift all beads
+            double shift = alpha * (rand_u() * 2 - 1);
+            for(int i=0;i<particle->beads.size();i++){
+                particle->beads[i].x += shift;
+            }
+        }else { // -> only shift one bead (bead)
+            int bead = min(rand_u() * particle->beads.size(), particle->beads.size() - 1);
+            particle->beads[bead].x += alpha * (rand_u() * 2 - 1);
+        }
+    }
+}
+
 void classic_harmonic_oscillator(){
+    cout<<"classical... ";
     output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\harmonic_oscillator_cl.csv");
-    srand (time(NULL));
     System system(&my_calc_internal_term,&my_calc_external_term);
     system.add_particle(Particle(1,'x',1,&my_step_1D));
     system.monte_carlo(1000);
@@ -91,8 +109,8 @@ void classic_harmonic_oscillator(){
 }
 
 void quantum_harmonic_oscillator(){
+    cout<<"quantum mode... ";
     output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\harmonic_oscillator_qm.csv");
-    srand (time(NULL));
     System system(&my_calc_internal_term,&my_calc_external_term);
     system.add_particle(Particle(1,'x',40,&my_step_1D));
     system.monte_carlo(1000);
@@ -103,8 +121,8 @@ void quantum_harmonic_oscillator(){
 }
 
 void naive_quantum_harmonic_oscillator(){
+    cout<<"naive... ";
     output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\harmonic_oscillator_qm_naive.csv");
-    srand (time(NULL));
     System system(&my_calc_internal_term,&my_calc_external_term);
     system.add_particle(Particle(1,'x',40,&my_step_1D_2));
     system.monte_carlo(1000);
@@ -114,10 +132,25 @@ void naive_quantum_harmonic_oscillator(){
     output_file.close();
 }
 
+// sometimes returns really weird results (looks more classical) ... probably needs more steps in order to converge
+void advanced_naive_quantum_harmonic_oscillator(){
+    cout<<"advanced naive... ";
+    output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\harmonic_oscillator_qm_adv_naive.csv");
+    System system(&my_calc_internal_term,&my_calc_external_term);
+    system.add_particle(Particle(1,'x',40,&my_step_1D_3));
+    system.monte_carlo(1000);
+    system.add_observable(&observable);
+    system.monte_carlo(50000);
+    cout<<"done. accepted vs rejected samples: "<<system.n_accepted<<" / "<<system.n_rejected<<endl;
+    output_file.close();
+}
+
 int main() {
     cout<<"Harmonic Oscillator"<<endl;
+    srand (time(NULL));
     classic_harmonic_oscillator();
-    //quantum_harmonic_oscillator();
-    //naive_quantum_harmonic_oscillator();
+    quantum_harmonic_oscillator();
+    naive_quantum_harmonic_oscillator();
+    advanced_naive_quantum_harmonic_oscillator();
     return 0;
 }
