@@ -7,6 +7,12 @@
 #include "Constants.h"
 #include <math.h>
 
+int get_mode(int max){
+    if(max == 0) return 0;
+    if(rand_u()<0.25)return 0;
+    else return 1+get_mode(max-1);
+}
+
 void _step(Particle* particle,vector<double> randoms){
     if(randoms.size()==0){
         // generate random uniform spherical distribution
@@ -23,15 +29,13 @@ void _step(Particle* particle,vector<double> randoms){
         z *= alpha;
 
         // excite "modes" of bead-ring
-        int mode = rand_u()*particle->beads.size()/2;
+        int mode = get_mode(particle->beads.size()/2);
         double phase = rand_u()*M_PI/2;
         for(int i=0;i<particle->beads.size();i++){
-            double factor = sin(i*mode*2*M_PI+phase);
-            vector<double> randoms;
-            randoms.push_back(factor*x);
-            randoms.push_back(factor*y);
-            randoms.push_back(factor*z);
-            particle->beads[i].step(&particle->beads[i],randoms);
+            double factor = sin(i*mode*2*M_PI/particle->beads.size()+phase);
+            particle->beads[i].x += factor*x;
+            particle->beads[i].y += factor*y;
+            particle->beads[i].z += factor*z;
         }
     }
 }

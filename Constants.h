@@ -5,6 +5,7 @@
 #ifndef PROJECTQM_ND_2_CONSTANTS_H
 #define PROJECTQM_ND_2_CONSTANTS_H
 
+// TODO: put these constants into System - class
 static const double H_BAR = 1;
 static const double K_B = 1;
 static const double T = 0.1;

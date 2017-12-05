@@ -42,7 +42,7 @@ inline int min(int a,int b){
 
 int get_mode(int max){
     if(max == 0) return 0;
-    if(rand_u()<0.2)return 0;
+    if(rand_u()<0.25)return 0;
     else return 1+get_mode(max-1);
 }
 
@@ -146,6 +146,7 @@ void advanced_naive_quantum_harmonic_oscillator(){
 }
 
 int main() {
+    //TODO: (evt) multiple runs for better convergence analysis
     cout<<"Harmonic Oscillator"<<endl;
     srand (time(NULL));
     classic_harmonic_oscillator();
