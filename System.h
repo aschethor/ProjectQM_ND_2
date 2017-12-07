@@ -7,8 +7,17 @@
 
 #include <vector>
 #include "Particle.h"
+#include "Utils.h"
 
 class System {
+
+private:
+
+    double H_BAR = 1;
+    double K_B = 1;
+    double T = 0.1;
+    double BETA = 1/K_B/T;
+
 public:
 
     //tmp terms needed in order to reverse steps
@@ -41,6 +50,20 @@ public:
     void (*step)(System*);//make random step
     void accept();//accept step (cpy values into tmp)
     void reject();//reverse step (restore values from tmp)
+
+    void set_T(double T){
+        this->T=T;
+        this->BETA = 1/K_B/T;
+    }
+
+    void set_H_BAR(double H_BAR){
+        this->H_BAR = H_BAR;
+    }
+
+    void set_K_B(double K_B){
+        this->K_B = K_B;
+        this->BETA = 1/K_B/T;
+    }
 };
 
 

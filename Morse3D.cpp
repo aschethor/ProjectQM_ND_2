@@ -3,7 +3,7 @@
 #include <time.h>
 #include "Particle.h"
 #include "System.h"
-#include "Constants.h"
+#include "Utils.h"
 #include <fstream>
 
 using namespace std;
@@ -38,7 +38,7 @@ double my_calc_external_term(Particle& particle){
     for(int i=0;i<n;i++){
         term += external_potential(particle.beads[i]);
     }
-    return term*BETA/n;
+    return term/n;
 }
 
 double my_calc_internal_term(Particle& particle1,Particle& particle2){
@@ -47,8 +47,9 @@ double my_calc_internal_term(Particle& particle1,Particle& particle2){
 
 void classic_morse(){
     cout<<"classical... ";
-    output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\morse_3d_cl.csv");
+    output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\data\\morse_3d_cl.csv");
     System system(&my_calc_internal_term,&my_calc_external_term);
+    system.set_T(0.1);
     system.add_particle(Particle(1,'x',1));
     system.monte_carlo(1000);
     system.add_observable(&observable);
@@ -59,8 +60,9 @@ void classic_morse(){
 
 void quantum_morse(){
     cout<<"quantum mode... ";
-    output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\morse_3d_qm.csv");
+    output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\data\\morse_3d_qm.csv");
     System system(&my_calc_internal_term,&my_calc_external_term);
+    system.set_T(0.1);
     system.add_particle(Particle(1,'x',40));
     system.monte_carlo(1000);
     system.add_observable(&observable);

@@ -3,7 +3,7 @@
 #include <time.h>
 #include "Particle.h"
 #include "System.h"
-#include "Constants.h"
+#include "Utils.h"
 #include <fstream>
 
 using namespace std;
@@ -29,7 +29,7 @@ double my_calc_external_term(Particle& particle){
     for(int i=0;i<n;i++){
         term += external_potential(particle.beads[i]);
     }
-    return term*BETA/n;
+    return term/n;
 }
 
 double my_calc_internal_term(Particle& particle1,Particle& particle2){
@@ -38,12 +38,6 @@ double my_calc_internal_term(Particle& particle1,Particle& particle2){
 
 inline int min(int a,int b){
     return a<b?a:b;
-}
-
-int get_mode(int max){
-    if(max == 0) return 0;
-    if(rand_u()<0.2)return 0;
-    else return 1+get_mode(max-1);
 }
 
 /*
@@ -70,7 +64,7 @@ void my_step_1D(Particle* particle,vector<double> randoms){
 /*
  * "naive" step-approach
  */
-void my_step_1D_2(Particle* particle,vector<double> randoms){
+void my_step_1D_naive(Particle *particle, vector<double> randoms){
     if(randoms.size()==0){
         double alpha = 1;
         int bead = min(rand_u()*particle->beads.size(),particle->beads.size()-1);

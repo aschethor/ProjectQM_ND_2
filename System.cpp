@@ -6,7 +6,7 @@
 #include <math.h>
 #include <cstdlib>
 #include <iostream>
-#include "Constants.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -66,7 +66,6 @@ System::System(double (*calc_internal_term)(Particle&,Particle&),double (*calc_e
     this->calc_internal_term = calc_internal_term;
     this->calc_external_term = calc_external_term;
     this->step = &_step;
-
 }
 
 System::System(double (*calc_internal_term)(Particle&, Particle&), double (*calc_external_term)(Particle&),void (*step)(System *)) {
@@ -116,7 +115,7 @@ void System::monte_carlo(int n_steps) {
 }
 
 double System::probability() {
-    return exp(-kinetic_term-internal_term-external_term);
+    return exp(-kinetic_term/BETA/H_BAR/2-BETA*(internal_term+external_term));
 }
 
 void System::reject() {

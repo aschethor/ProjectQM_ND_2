@@ -4,14 +4,8 @@
 
 #include <iostream>
 #include "Particle.h"
-#include "Constants.h"
+#include "Utils.h"
 #include <math.h>
-
-int get_mode(int max){
-    if(max == 0) return 0;
-    if(rand_u()<0.25)return 0;
-    else return 1+get_mode(max-1);
-}
 
 void _step(Particle* particle,vector<double> randoms){
     if(randoms.size()==0){
@@ -83,7 +77,7 @@ double Particle::kinetic_term() {
     for(int i=1;i<n;i++){
         kinetic_term += beads[i].distance_squared(beads[i-1]);
     }
-    return n*mass*kinetic_term/BETA/H_BAR/2;
+    return n*mass*kinetic_term;
 }
 
 void Particle::reject() {
