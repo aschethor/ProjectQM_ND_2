@@ -36,10 +36,6 @@ double my_calc_internal_term(Particle& particle1,Particle& particle2){
     return 0;
 }
 
-inline int min(int a,int b){
-    return a<b?a:b;
-}
-
 /*
  * steps with "modes"
  * -> much better convergence
@@ -64,7 +60,7 @@ void my_step_1D(Particle* particle,vector<double> randoms){
 /*
  * "naive" step-approach
  */
-void my_step_1D_naive(Particle *particle, vector<double> randoms){
+void my_step_1D_2(Particle *particle, vector<double> randoms){
     if(randoms.size()==0){
         double alpha = 1;
         int bead = min(rand_u()*particle->beads.size(),particle->beads.size()-1);
@@ -75,7 +71,7 @@ void my_step_1D_naive(Particle *particle, vector<double> randoms){
 /*
  * "naive" step-approach but a bit more advanced
  */
-void my_step_1D_adv_naive(Particle *particle, vector<double> randoms){
+void my_step_1D_3(Particle *particle, vector<double> randoms){
     if(randoms.size()==0){
         double alpha = 1;
         if(rand_u()<0.15){ // -> shift all beads
@@ -121,7 +117,7 @@ void naive_quantum_harmonic_oscillator(){
     output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\data\\harmonic_oscillator_qm_naive.csv");
     System system(&my_calc_internal_term,&my_calc_external_term);
     system.set_T(0.1);
-    system.add_particle(Particle(1,'x',40, &my_step_1D_naive));
+    system.add_particle(Particle(1,'x',40, &my_step_1D_2));
     system.monte_carlo(1000);
     system.add_observable(&observable);
     system.monte_carlo(50000);
@@ -135,7 +131,7 @@ void advanced_naive_quantum_harmonic_oscillator(){
     output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\data\\harmonic_oscillator_qm_adv_naive.csv");
     System system(&my_calc_internal_term,&my_calc_external_term);
     system.set_T(0.1);
-    system.add_particle(Particle(1,'x',40, &my_step_1D_adv_naive));
+    system.add_particle(Particle(1,'x',40, &my_step_1D_3));
     system.monte_carlo(1000);
     system.add_observable(&observable);
     system.monte_carlo(50000);

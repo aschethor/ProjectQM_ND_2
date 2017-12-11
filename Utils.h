@@ -21,7 +21,7 @@ inline int get_mode(int max){
     else return 1+get_mode(max-1);
 }
 
-inline bool min(double a,double b){
+inline int min(int a,int b){
     return a<b?a:b;
 }
 
