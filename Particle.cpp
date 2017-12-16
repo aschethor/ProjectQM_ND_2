@@ -73,21 +73,21 @@ Particle::Particle(double mass, char element, int nBeads, void (*step_particle)(
 
 double Particle::kinetic_term() {
     int n = beads.size();
-    double kinetic_term = beads[0].distance_squared(beads[n-1]);
+    double kinetic_term = beads.[0].distance_squared(beads[n-1]);
     for(int i=1;i<n;i++){
-        kinetic_term += beads[i].distance_squared(beads[i-1]);
+        kinetic_term += beads.[i].distance_squared(beads[i-1]);
     }
     return n*mass*kinetic_term;
 }
 
 void Particle::reject() {
     for(int i=0;i<beads.size();i++){
-        beads[i].reject();
+        beads.[i].reject();
     }
 }
 
 void Particle::accept() {
     for(int i=0;i<beads.size();i++){
-        beads[i].accept();
+        beads.[i].accept();
     }
 }

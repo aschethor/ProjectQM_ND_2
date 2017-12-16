@@ -44,11 +44,10 @@ void my_step_1D(Particle* particle,vector<double> randoms){
     if(randoms.size()==0){
         double alpha = 1;
         double x = (rand_u()*2-1)*alpha;
-
         // excite "modes" of bead-ring
         // int mode = min(-(int)log2(rand_u()),particle->beads.size()/2);
         int mode = get_mode(particle->beads.size()/2);
-        // cout<<" excited mode: "<<mode<<endl;
+        // cout<<" excited mode: "<<mode<<" x: "<<x<<endl;
         double phase = rand_u()*M_PI/2;
         for(int i=0;i<particle->beads.size();i++){
             double factor = sin(i*mode*2*M_PI/particle->beads.size()+phase);
@@ -65,22 +64,20 @@ void quantum_double_well(double temperature, int n_beads){
     System system(&my_calc_internal_term,&my_calc_external_term);
     system.set_T(temperature);
     system.add_particle(Particle(1,'x',n_beads,&my_step_1D));
-    system.monte_carlo(10000);
-    cout<<"System after init:"<<endl;
-    for(int i=0;i<system.particles[0].beads.size();i++){
-        cout<<system.particles[0].beads[i].x<<", "<<endl;
-    }
+    system.monte_carlo(1000);
     system.add_observable(&observable);
-    system.monte_carlo(40000*32/n_beads);
+    system.monte_carlo(100000);
     cout<<"done. accepted vs rejected samples: "<<system.n_accepted<<" / "<<system.n_rejected<<endl;
     output_file.close();
 }
 
+//TODO: Bug: sometimes program execution seems to stop without any reason / error message (even during printing)
+
 int main() {
     cout<<"Harmonic Oscillator"<<endl;
-    srand (time(NULL));
-    double temperatures[] = {0.1};//{0.1,1};
-    int n_beads[] = {64};//{1,2,4,8,16,32,64};
+    srand (0);//(time(NULL));
+    double temperatures[] = {1};//{0.1,1};
+    int n_beads[] = {1,2,4,8,16,32,64};
     for(double t:temperatures){
         for(int n:n_beads){
             quantum_double_well(t, n);

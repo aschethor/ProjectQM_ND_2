@@ -51,27 +51,33 @@ double _calc_internal_term(Particle& particle1,Particle& particle2){
 }
 
 System::System() {
-    kinetic_term = 0;
-    external_term = 0;
-    internal_term = 0;
+    n_accepted = 0;
+    n_rejected = 0;
+    kinetic_term = kinetic_term_tmp = 0;
+    external_term = external_term_tmp = 0;
+    internal_term = internal_term_tmp = 0;
     this->calc_internal_term = _calc_internal_term;
     this->calc_external_term = _calc_external_term;
     this->step = &_step;
 }
 
 System::System(double (*calc_internal_term)(Particle&,Particle&),double (*calc_external_term)(Particle&)) {
-    kinetic_term = 0;
-    external_term = 0;
-    internal_term = 0;
+    n_accepted = 0;
+    n_rejected = 0;
+    kinetic_term = kinetic_term_tmp = 0;
+    external_term = external_term_tmp = 0;
+    internal_term = internal_term_tmp = 0;
     this->calc_internal_term = calc_internal_term;
     this->calc_external_term = calc_external_term;
     this->step = &_step;
 }
 
 System::System(double (*calc_internal_term)(Particle&, Particle&), double (*calc_external_term)(Particle&),void (*step)(System *)) {
-    kinetic_term = 0;
-    external_term = 0;
-    internal_term = 0;
+    n_accepted = 0;
+    n_rejected = 0;
+    kinetic_term = kinetic_term_tmp = 0;
+    external_term = external_term_tmp = 0;
+    internal_term = internal_term_tmp = 0;
     this->calc_internal_term = calc_internal_term;
     this->calc_external_term = calc_external_term;
     this->step = step;
