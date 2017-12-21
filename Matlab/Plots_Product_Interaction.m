@@ -45,4 +45,5 @@ hold on
 histogram(data_qm(:,2), x,'LineStyle','none')
 title('... advanced naive')
 
-
+% TODO: make 2d plot
+% CECAM visp paper: 2 morse potetial compare

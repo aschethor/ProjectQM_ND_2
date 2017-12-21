@@ -82,12 +82,12 @@ double Particle::kinetic_term() {
 
 void Particle::reject() {
     for(int i=0;i<beads.size();i++){
-        beads.[i].reject();
+        beads[i].reject();
     }
 }
 
 void Particle::accept() {
     for(int i=0;i<beads.size();i++){
-        beads.[i].accept();
+        beads[i].accept();
     }
 }

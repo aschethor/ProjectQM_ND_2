@@ -85,13 +85,18 @@ x = -3:dx:3;
 figure(4)
 clf
 
+data_optimal = normrnd(0,sqrt(M*w/(2*H_BAR*sinh(BETA*H_BAR*w))*(cosh(BETA*H_BAR*w)-1)),n,1);
+
 nsamples = 0:10000:length(data_qm);
 convergence_qm = L2_convergence(rho,data_qm,x,nsamples);
 convergence_adv_naive = L2_convergence(rho,data_adv_naive,x,nsamples);
 convergence_naive = L2_convergence(rho,data_naive,x,nsamples);
+convergence_optimal = L2_convergence(rho,data_optimal,x,nsamples);
 semilogy(nsamples,convergence_qm)
 hold on
 semilogy(nsamples,convergence_adv_naive)
 semilogy(nsamples,convergence_naive)
+semilogy(nsamples,convergence_optimal)
+semilogy(nsamples,1./sqrt(nsamples),'--')
 title('convergence of density distribution in L^2 norm')
-legend('mode','adv naive','naive')
+legend('mode','adv naive','naive','optimal','1/sqrt(N)')
