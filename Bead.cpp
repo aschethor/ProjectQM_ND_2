@@ -8,6 +8,11 @@
 
 using namespace std;
 
+/**
+ * standrad stepping method for beads
+ * @param bead bead to displace
+ * @param randoms vector containing 3 values for the displacements in x,y,z direction
+ */
 void _step(Bead* bead,vector<double> randoms) {
     // cout<<"Bead step";
     if(randoms.size()==3){
@@ -34,10 +39,20 @@ double inline square(double a){
     return a*a;
 }
 
+/**
+ * compute distance squared to bead
+ * @param bead
+ * @return distance squared to bead
+ */
 double Bead::distance_squared(Bead bead) {
     return square(x-bead.x)+square(y-bead.y)+square(z-bead.z);
 }
 
+/**
+ * compute distance to bead
+ * @param bead
+ * @return distance to bead
+ */
 double Bead::distance(Bead bead) {
     return sqrt(distance_squared(bead));
 }

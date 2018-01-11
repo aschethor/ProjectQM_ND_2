@@ -1,12 +1,17 @@
-//
-// Created by aschethor on 02.11.17.
-//
 
 #include <iostream>
 #include "Particle.h"
 #include "Utils.h"
 #include <math.h>
 
+/**
+ * standard stepping technique of particles using 3d mode stepping:
+ *  - choose direction and amplitude of mode displacement
+ *  - choose mode to displace
+ *  - displace beads according to chosen parameters
+ * @param particle particle to displace
+ * @param randoms evt. further parameters (not used here)
+ */
 void _step(Particle* particle,vector<double> randoms){
     if(randoms.size()==0){
         // generate random uniform spherical distribution
@@ -71,11 +76,15 @@ Particle::Particle(double mass, char element, int nBeads, void (*step_particle)(
     this->step = step_particle;
 }
 
+/**
+ * calculate kinetic term from bead distances
+ * @return kinetic term
+ */
 double Particle::kinetic_term() {
     int n = beads.size();
-    double kinetic_term = beads.[0].distance_squared(beads[n-1]);
+    double kinetic_term = beads[0].distance_squared(beads[n-1]);
     for(int i=1;i<n;i++){
-        kinetic_term += beads.[i].distance_squared(beads[i-1]);
+        kinetic_term += beads[i].distance_squared(beads[i-1]);
     }
     return n*mass*kinetic_term;
 }

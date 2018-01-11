@@ -1,9 +1,9 @@
 #include <iostream>
 #include <math.h>
 #include <time.h>
-#include "Particle.h"
-#include "System.h"
-#include "Utils.h"
+#include "../Particle.h"
+#include "../System.h"
+#include "../Utils.h"
 #include <fstream>
 
 using namespace std;

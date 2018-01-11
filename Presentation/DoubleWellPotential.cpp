@@ -11,9 +11,7 @@ using namespace std;
 ofstream output_file;
 
 void observable(System& system){
-    // cout<<"here in observable: ";
     for(int i=0;i<system.particles[0].beads.size();i++){
-        //cout<<system.particles[0].beads[i].x<<" ";
         output_file<<""<<system.particles[0].beads[i].x<<endl;
     }
 }
@@ -37,8 +35,7 @@ double my_calc_internal_term(Particle& particle1,Particle& particle2){
 }
 
 /*
- * steps with "modes"
- * -> much better convergence
+ * mode-stepping in 1 dimension
  */
 void my_step_1D(Particle* particle,vector<double> randoms){
     if(randoms.size()==0){
