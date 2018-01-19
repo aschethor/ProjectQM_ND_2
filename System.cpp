@@ -150,7 +150,7 @@ void System::monte_carlo(int n_steps) {
  * @return probability
  */
 double System::probability() {
-    return exp(-kinetic_term/BETA/H_BAR/2-BETA*(internal_term+external_term));
+    return exp(-kinetic_term/BETA/H_BAR/H_BAR/2-BETA*(internal_term+external_term));
 }
 
 /**

@@ -24,12 +24,15 @@ double external_potential(Bead bead){
 double my_calc_external_term(Particle& particle){
     int n = particle.beads.size();
     double term = 0;
+    double w = 1;
+    if(particle.beads.size()==10)w=2;
     for(int i=0;i<n;i++){
-        term += external_potential(particle.beads[i]);
+        term += w*w*external_potential(particle.beads[i]);
     }
     return particle.mass*term/n;
 }
 
+// this function calculates the interaction potential between 2 particles
 double my_calc_internal_term(Particle& particle1,Particle& particle2){
     double c=5;
     int n1 = particle1.beads.size();
