@@ -33,8 +33,8 @@ void _step(System* system){
         system->internal_terms[index] = system->calc_internal_term(system->particles[i],system->particles[j]);
         system->internal_term += system->internal_terms[index];
     }
-    for(int j=i;j<system->particles.size()-1;j++){
-        int index = i+j*(j+1)/2;
+    for(int j=i+1;j<system->particles.size();j++){
+        int index = i+j*(j-1)/2;
         system->internal_term -= system->internal_terms[index];
         system->internal_terms[index] = system->calc_internal_term(system->particles[i],system->particles[j]);
         system->internal_term += system->internal_terms[index];

@@ -17,38 +17,30 @@ void observable(System& system){
 }
 
 double external_potential(Bead bead){
-    double w = 1;
-    return w*w/2*bead.x*bead.x;
+    double k = 1;
+    return k/2*bead.x*bead.x;
 }
 
 double my_calc_external_term(Particle& particle){
     int n = particle.beads.size();
     double term = 0;
-    double w = 1;
-    if(particle.beads.size()==10)w=2;
     for(int i=0;i<n;i++){
-        term += w*w*external_potential(particle.beads[i]);
+        term += external_potential(particle.beads[i]);
     }
     return particle.mass*term/n;
 }
 
 // this function calculates the interaction potential between 2 particles
 double my_calc_internal_term(Particle& particle1,Particle& particle2){
-    double c=1;
+    double kappa=1;
     int n1 = particle1.beads.size();
     int n2 = particle2.beads.size();
     if(n1==n2){
         double term = 0;
-        for(int i=0;i<particle1.beads.size();i++){
-            term += particle1.beads[i].x*particle2.beads[i].x;
+        for(int i=0;i<n1;i++){
+            term += (particle1.beads[i].x-particle2.beads[i].x)*(particle1.beads[i].x-particle2.beads[i].x);
         }
-        return c*term/n1;
-    }else if (n1>n2){
-        int m = n1/n2;
-        //TODO
-    }else{
-        int n = n2/n1;
-        //TODO
+        return kappa/2*term/n1;
     }
     return 0;
 }
@@ -68,9 +60,6 @@ void my_step_1D(Particle* particle,vector<double> randoms){
     }
 }
 
-/*
- * "naive" step-approach but a bit more advanced
- */
 void my_step_1D_adv_naive(Particle *particle, vector<double> randoms){
     if(randoms.size()==0){
         double alpha = 1;
@@ -86,26 +75,26 @@ void my_step_1D_adv_naive(Particle *particle, vector<double> randoms){
     }
 }
 
-void classic_product_interaction_adv_naive(){
+void classic_coupled_harmonic_oscillator_adv_naive(){
     cout<<"classical advanced naive... ";
-    output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\data\\product_interaction_cl_adv_naive.csv");
+    output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\data\\coupled_harmonic_oscillator_k1_cl_adv_naive.csv");
     System system(&my_calc_internal_term,&my_calc_external_term);
     system.set_T(0.1);
     system.add_particle(Particle(1,'x',1, &my_step_1D_adv_naive));
-    system.add_particle(Particle(10,'x',1, &my_step_1D_adv_naive));
+    system.add_particle(Particle(1,'x',1, &my_step_1D_adv_naive));
     system.monte_carlo(1000);
     system.add_observable(&observable);
     system.monte_carlo(500000);
     cout<<"done. accepted vs rejected samples: "<<system.n_accepted<<" / "<<system.n_rejected<<endl;
     output_file.close();
 }
-void classic_product_interaction(){
+void classic_coupled_harmonic_oscillator(){
     cout<<"classical... ";
-    output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\data\\product_interaction_cl.csv");
+    output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\data\\coupled_harmonic_oscillator_k1_cl.csv");
     System system(&my_calc_internal_term,&my_calc_external_term);
     system.set_T(0.1);
     system.add_particle(Particle(1,'x',1,&my_step_1D));
-    system.add_particle(Particle(10,'x',1,&my_step_1D));
+    system.add_particle(Particle(1,'x',1,&my_step_1D));
     system.monte_carlo(1000);
     system.add_observable(&observable);
     system.monte_carlo(500000);
@@ -113,13 +102,13 @@ void classic_product_interaction(){
     output_file.close();
 }
 
-void quantum_product_interaction_adv_naive(){
+void quantum_coupled_harmonic_oscillator_adv_naive(){
     cout<<"quantum advance naive... ";
-    output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\data\\product_interaction_qm_adv_naive.csv");
+    output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\data\\coupled_harmonic_oscillator_k1_qm_adv_naive.csv");
     System system(&my_calc_internal_term,&my_calc_external_term);
     system.set_T(0.1);
     system.add_particle(Particle(1,'x',40, &my_step_1D_adv_naive));
-    system.add_particle(Particle(10,'x',40, &my_step_1D_adv_naive));
+    system.add_particle(Particle(1,'x',40, &my_step_1D_adv_naive));
     system.monte_carlo(1000);
     system.add_observable(&observable);
     system.monte_carlo(500000);
@@ -127,13 +116,13 @@ void quantum_product_interaction_adv_naive(){
     output_file.close();
 }
 
-void quantum_product_interaction(){
+void quantum_coupled_harmonic_oscillator(){
     cout<<"quantum... ";
-    output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\data\\product_interaction_qm.csv");
+    output_file.open("C:\\Users\\NiWa\\Documents\\MATLAB\\Project CQM\\data\\coupled_harmonic_oscillator_k1_qm.csv");
     System system(&my_calc_internal_term,&my_calc_external_term);
     system.set_T(0.1);
     system.add_particle(Particle(1,'x',40,&my_step_1D));
-    system.add_particle(Particle(10,'x',40,&my_step_1D));
+    system.add_particle(Particle(1,'x',40,&my_step_1D));
     system.monte_carlo(1000);
     system.add_observable(&observable);
     system.monte_carlo(500000);
@@ -143,12 +132,11 @@ void quantum_product_interaction(){
 
 
 int main() {
-    //TODO: (evt) multiple runs for better convergence analysis
-    cout<<"Product Interaction"<<endl;
+    cout<<"Coupled Harmonic Oscillator"<<endl;
     srand (time(NULL));
-    classic_product_interaction_adv_naive();
-    classic_product_interaction();
-    quantum_product_interaction_adv_naive();
-    quantum_product_interaction();
+    classic_coupled_harmonic_oscillator_adv_naive();
+    classic_coupled_harmonic_oscillator();
+    quantum_coupled_harmonic_oscillator_adv_naive();
+    quantum_coupled_harmonic_oscillator();
     return 0;
 }

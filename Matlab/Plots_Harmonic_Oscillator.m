@@ -10,6 +10,7 @@ M = 1;
 %% histogram - classical harmonic oscillator
 figure(1)
 clf
+set(gcf,'color','w');
 data = csvread('data/harmonic_oscillator_cl.csv');
 n = length(data);
 dx = 0.02;
@@ -25,6 +26,7 @@ title('classical harmonic oscillator')
 %% histograms - quantum harmonic oscillator (different approaches)
 figure(2)
 clf
+set(gcf,'color','w');
 subplot(1,3,1)
 data_qm = csvread('data/harmonic_oscillator_qm.csv');
 n = length(data_qm);
@@ -36,24 +38,25 @@ w = 1;
 V = @(x)w*x.^2;
 y = exp(-M*w*2/(2*H_BAR*sinh(BETA*H_BAR*w))*(cosh(BETA*H_BAR*w)-1)*x.*x);
 y = y/sum(y)*n;
-plot(x,y,'r');
+plot(x,y,'r','LineWidth',2);
 title('quantum harmonic oscillator - mode approach')
 subplot(1,3,2)
 data_adv_naive = csvread('data/harmonic_oscillator_qm_adv_naive.csv');
 hist(data_adv_naive,x)
 hold on
-plot(x,y,'r')
+plot(x,y,'r','LineWidth',2)
 title('... and advanced naive approach')
 subplot(1,3,3)
 data_naive = csvread('data/harmonic_oscillator_qm_naive.csv');
 hist(data_naive,x)
 hold on
-plot(x,y,'r')
+plot(x,y,'r','LineWidth',2)
 title('quantum harmonic oscillator - naive approach')
 
 %% running averages - convergency of different approaches
 figure(3)
 clf
+set(gcf,'color','w');
 x = (1:length(data_qm))';
 subplot(2,1,1)
 plot(cumsum(data_qm)./x,'r')
@@ -84,6 +87,7 @@ x = -3:dx:3;
 
 figure(4)
 clf
+set(gcf,'color','w');
 
 data_optimal = normrnd(0,sqrt(M*w/(2*H_BAR*sinh(BETA*H_BAR*w))*(cosh(BETA*H_BAR*w)-1)),n,1);
 
